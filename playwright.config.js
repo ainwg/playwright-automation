@@ -10,6 +10,5 @@ export default defineConfig({
   use: {
     //trace: 'on-first-retry',
     browserName: "chromium",
-    headless: false,
   },
 });
