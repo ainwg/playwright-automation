@@ -8,7 +8,8 @@ import { test, expect } from "@playwright/test";
 // });
 
 test("Page Playwright Test", async ({ page }) => {
-  await page.goto("https://www.google.com");
-  console.log(await page.title());
-  await expect(page).toHaveTitle("Google");
+  await page.goto("https://www.saucedemo.com");
+  await page.locator("#user-name").fill("standard_user");
+  await page.locator("#password").fill("secret_sauce");
+  await page.locator("#login-button").click;
 });
