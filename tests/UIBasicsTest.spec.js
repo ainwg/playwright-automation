@@ -43,6 +43,7 @@ test("UI Controls", async ({ page }) => {
 test.only("Child windows handle", async ({ browser }) => {
   const context = await browser.newContext();
   const page = await context.newPage();
+  const username = page.locator("#username");
   await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
   const docLink = page.locator("[href*='documents-request']");
   const [newPage] = await Promise.all(
@@ -54,5 +55,11 @@ test.only("Child windows handle", async ({ browser }) => {
   );
 
   const text = await newPage.locator(".red").textContent(); // grab the text on new page
-  console.log(text);
+  //console.log(text);
+  const splitText = text.split("@");
+  const domain = splitText[1].split(" ")[0];
+  console.log(domain);
+  await username.fill(domain);
+  await page.pause();
+  console.log(await username.inputValue());
 });
