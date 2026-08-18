@@ -18,7 +18,7 @@ test("Page Playwright Test", async ({ page }) => {
   console.log(await page.locator("div .inventory_item_name").allTextContents());
 });
 
-test.only("UI Controls", async ({ page }) => {
+test("UI Controls", async ({ page }) => {
   await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
   const username = page.locator("#username");
   const password = page.locator("#password");
@@ -27,6 +27,7 @@ test.only("UI Controls", async ({ page }) => {
   const radiobtn = page.locator(".radiotextsty");
   const okButton = page.locator("#okayBtn");
   const terms = page.locator("#terms");
+  const docLink = page.locator("[href*='documents-request']");
   // select value from dropdown
   await dropdown.selectOption("stud");
   // select value from radio button
@@ -36,4 +37,22 @@ test.only("UI Controls", async ({ page }) => {
   await expect(radiobtn.last()).toBeChecked();
   await terms.click();
   await expect(terms).toBeChecked();
+  await expect(docLink).toHaveAttribute("class", "blinkingText");
+});
+
+test.only("Child windows handle", async ({ browser }) => {
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
+  const docLink = page.locator("[href*='documents-request']");
+  const [newPage] = await Promise.all(
+    // wait for steps to parallelly executed asynchronously
+    [
+      context.waitForEvent("page"), // wait for another page to open in background
+      docLink.click(), // open new page
+    ],
+  );
+
+  const text = await newPage.locator(".red").textContent(); // grab the text on new page
+  console.log(text);
 });
