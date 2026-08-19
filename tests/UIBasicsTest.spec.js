@@ -40,7 +40,7 @@ test("UI Controls", async ({ page }) => {
   await expect(docLink).toHaveAttribute("class", "blinkingText");
 });
 
-test.only("Child windows handle", async ({ browser }) => {
+test("Child windows handle", async ({ browser }) => {
   const context = await browser.newContext();
   const page = await context.newPage();
   const username = page.locator("#username");
@@ -62,4 +62,21 @@ test.only("Child windows handle", async ({ browser }) => {
   await username.fill(domain);
   await page.pause();
   console.log(await username.inputValue());
+});
+
+test.only("Dynamic script add to cart", async ({ page }) => {
+  const products = page.locator("div .inventory_item_name");
+  await page.goto("https://www.saucedemo.com");
+  await page.locator("#user-name").fill("standard_user");
+  await page.locator("#password").fill("secret_sauce");
+  await page.locator("#login-button").click();
+  //console.log(await products.allTextContents());
+  const count = await products.count();
+  for (let i = 0; i < count; i++) {
+    if ((await products.nth(i).textContent()) === "Sauce Labs Fleece Jacket") {
+      await page.locator("#add-to-cart-sauce-labs-fleece-jacket").click();
+      break;
+    }
+  }
+  await page.pause();
 });
